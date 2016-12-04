@@ -753,7 +753,7 @@ cpdefine("inline:nl-elzekool-workspace-grbl", ["chilipeppr_ready"], function() {
 
                             spc.onRecvLine = newOnRecvLine;
                             spc.jsonOnQueue = newJsonOnQueue;
-                            spc.init(true, /^ok|^\n/);
+                            spc.init(false, /^ok|^\n/);
                             $(window).on('resize', function(evt) {
                                 if ($.isWindow(evt.target)) {
                                     spc.resize();
@@ -786,8 +786,6 @@ cpdefine("inline:nl-elzekool-workspace-grbl", ["chilipeppr_ready"], function() {
                     cprequire(
                         ["inline:com-chilipeppr-widget-serialport"],
                         function(sp) {
-                            window.SerialPortWidget = sp;
-                            sp.setSingleSelectMode();
                             sp.init(null, "grbl");
                         });
                 });
