@@ -225,29 +225,9 @@ cpdefine("inline:com-chilipeppr-workspace-grbl", ["chilipeppr_ready"], function(
          * and inits them.
          */
         init: function() {
-            /*
-            // Most workspaces will instantiate the Serial Port JSON Server widget
-            this.loadSpjsWidget();
-            // Most workspaces will instantiate the Serial Port Console widget
-            this.loadConsoleWidget(function() {
-                setTimeout(function() { $(window).trigger('resize'); }, 100);
-            });
-            */
             this.loadWidgets();
-
-            //this.loadTemplateWidget();
-
-            // Create our workspace upper right corner triangle menu
             this.loadWorkspaceMenu();
-            // Add our billboard to the menu (has name, url, picture of workspace)
             this.addBillboardToWorkspaceMenu();
-
-            //chilipeppr.publish('/com-chilipeppr-elem-flashmsg/flashmsg', "Recent Maintenance", "Hello!  We recently updated the GRBL workspace.  Please let us know if you have any issues.  If auto-level still does not work, please continue to use chilipeppr.com/imania. But we'd really like to hear if it does! ", 15 * 1000);
-
-            // Setup an event to react to window resize. This helps since
-            // some of our widgets have a manual resize to cleanly fill
-            // the height of the browser window. You could turn this off and
-            // just set widget min-height in CSS instead
             this.setupResize();
             setTimeout(function() {
                 $(window).trigger('resize');
@@ -500,29 +480,6 @@ cpdefine("inline:com-chilipeppr-workspace-grbl", ["chilipeppr_ready"], function(
                 "#com-chilipeppr-ws-gcode-menu-billboard",
                 "http://fiddle.jshell.net/chilipeppr/6z76Z/show/light/");
 
-            //Unsure what the purpose of this is; loading the wrong widgets. 
-            // MODIFY
-            // This is a fiddle that looks at the Grbl workspace being instantiated
-            // here and attaches 3 menu items. 1) the pubsub viewer dialog so users
-            // can see what pubsubs this workspace may publish or subscribe to 2) It
-            // lets them fork the workspace for their own use
-            /*
-            chilipeppr.load(
-                "http://fiddle.jshell.net/chilipeppr/zMbL9/show/light/",
-
-                function() {
-                    require(['inline:com-chilipeppr-elem-pubsubviewer'], function(pubsubviewer) {
-                        // you are asking the pubsubviewer to show its menu
-                        // inside the dom element in the 1st param, in the 2nd
-                        // param you are giving it which object to analyze to gather
-                        // its data, the 3rd param is just a name
-                        pubsubviewer.attachTo(
-                            $('#com-chilipeppr-ws-gcode-menu .dropdown-menu-ws'),
-                            ws,
-                            "Workspace");
-                    });
-                });
-                */
 
             // 3D Viewer
             // http://jsfiddle.net/chilipeppr/y3HRF
@@ -963,11 +920,6 @@ cpdefine("inline:com-chilipeppr-workspace-grbl", ["chilipeppr_ready"], function(
                             //remove A axis toggle option
                             $('#com-chilipeppr-widget-xyz .showhideaaxis').remove();
 
-                            //Port the inches/mm code to grbl workspace - change to work with grbl
-
-                            //$('#com-chilipeppr-widget-xyz .btnInMm').unbind("click");
-                            //$('#com-chilipeppr-widget-xyz .btnInMm').click(xyz.toggleInMm.bind(xyz));
-
                             //remove existing keydown/keyup commands for jogging -- will replace these with our own keypress function
                             $('#com-chilipeppr-widget-xyz-ftr').unbind("keydown");
                             $('#com-chilipeppr-widget-xyz-ftr').unbind("keyup");
@@ -986,9 +938,6 @@ cpdefine("inline:com-chilipeppr-workspace-grbl", ["chilipeppr_ready"], function(
                                 if (!(evt.which > 30 && evt.which < 41)) {
                                     console.log("exiting cuz not arrow key. evt:", evt);
                                     return;
-                                }
-                                else {
-                                    //console.log("evt:", evt);
                                 }
 
                                 var key = evt.which;
@@ -1053,36 +1002,6 @@ cpdefine("inline:com-chilipeppr-workspace-grbl", ["chilipeppr_ready"], function(
                         });
                 });
 
-
-
-            chilipeppr.load(
-                "#com-chilipeppr-ws-macro",
-                "http://jsfiddle.net/forstuvning/3gmfmnna/8/show/light/",
-                function() {
-                    require(["inline:com-chilipeppr-widget-macro"], function(macro) {
-                        macro.init();
-                        // setup toggle button
-                        var alBtn = $('#com-chilipeppr-ws-gcode-menu .macro-button');
-                        var alDiv = $('#com-chilipeppr-ws-macro');
-                        alBtn.click(function() {
-                            if (alDiv.hasClass("hidden")) {
-                                // unhide
-                                alDiv.removeClass("hidden");
-                                alBtn.addClass("active");
-                                //autolevel.onDisplay();
-                            }
-                            else {
-                                alDiv.addClass("hidden");
-                                alBtn.removeClass("active");
-                                //autolevel.onUndisplay();
-                            }
-                            $(window).trigger('resize');
-
-                        });
-                    });
-                });
-
-
             // Serial Port Log Window
             // http://jsfiddle.net/chilipeppr/rczajbx0/
             chilipeppr.load("#com-chilipeppr-serialport-log",
@@ -1097,8 +1016,6 @@ cpdefine("inline:com-chilipeppr-workspace-grbl", ["chilipeppr_ready"], function(
                             //stop spconsole from showing status requests responses from jsps
                             var oldOnRecvLine = spc.onRecvLine.bind(spc);
                             var newOnRecvLine = function(data) {
-                                //ignore incoming status update to keep console clear otherwise continue with original function
-                                console.log("GRBL: AltOnRecvLine: " + data.dataline);
                                 if (data.dataline.search(/^<|^\$G|^\?|^\[/) < 0 || $('#com-chilipeppr-widget-grbl .grbl-verbose').hasClass("enabled")) {
                                     data.dataline = data.dataline.replace("<", "&lt;").replace(">", "&gt;");
                                     oldOnRecvLine(data);
@@ -1115,22 +1032,12 @@ cpdefine("inline:com-chilipeppr-workspace-grbl", ["chilipeppr_ready"], function(
 
                             spc.onRecvLine = newOnRecvLine;
                             spc.jsonOnQueue = newJsonOnQueue;
-
                             spc.init(true, /^ok|^\n/);
-
-                            // resize this console on a browser resize
                             $(window).on('resize', function(evt) {
-                                //console.log("serial-port-console. resize evt:", evt);
                                 if ($.isWindow(evt.target)) {
-                                    //console.log("resize was window. so resizing");
                                     spc.resize();
                                 }
-                                else {
-                                    //console.log("resize was not window, so ignoring");
-                                }
                             });
-                            // resize this console if we get a publish
-                            // from the gcode viewer widget
                             chilipeppr.subscribe("/com-chilipeppr-widget-gcode/resize", spc, spc.resize);
                         });
                 });
@@ -1146,13 +1053,9 @@ cpdefine("inline:com-chilipeppr-workspace-grbl", ["chilipeppr_ready"], function(
 
                 function() {
                     cprequire(
-                        ["inline:com-chilipeppr-widget-grbl"], //"inline:com-chilipeppr-widget-spconsole"],
-                        //, "inline:com-chilipeppr-serialport-spselector"],
-
+                        ["inline:com-chilipeppr-widget-grbl"],
                         function(grbl) { //,spconsole) {
-
                             grbl.init();
-
                         });
                 });
 
@@ -1160,18 +1063,12 @@ cpdefine("inline:com-chilipeppr-workspace-grbl", ["chilipeppr_ready"], function(
             // http://jsfiddle.net/chilipeppr/vetj5fvx/
             chilipeppr.load("com-chilipeppr-serialport-spselector",
                 "http://fiddle.jshell.net/chilipeppr/vetj5fvx/show/light/",
-
                 function() {
                     cprequire(
                         ["inline:com-chilipeppr-widget-serialport"],
-
                         function(sp) {
                             sp.setSingleSelectMode();
-                            //sp.init("192.168.1.7");
                             sp.init(null, "grbl");
-                            //$('.com-chilipeppr-widget-serialport-console').removeClass("hidden");
-                            //$('.com-chilipeppr-widget-serialport-consoleinput').removeClass("hidden");
-                            //$('.com-chilipeppr-widget-serialport-status').removeClass("hidden");
                         });
                 });
 
