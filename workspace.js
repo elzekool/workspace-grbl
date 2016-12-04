@@ -763,8 +763,6 @@ cpdefine("inline:nl-elzekool-workspace-grbl", ["chilipeppr_ready"], function() {
                         });
                 });
 
-            /*
-
             // GRBL
             // http://jsfiddle.net/jarret/b5L2rtgc/ //alternate test version of grbl controller
             // com-chilipeppr-grbl
@@ -779,8 +777,6 @@ cpdefine("inline:nl-elzekool-workspace-grbl", ["chilipeppr_ready"], function() {
                             grbl.init();
                         });
                 });
-                
-                */
 
             // Serial Port Selector
             // http://jsfiddle.net/chilipeppr/vetj5fvx/
@@ -790,6 +786,7 @@ cpdefine("inline:nl-elzekool-workspace-grbl", ["chilipeppr_ready"], function() {
                     cprequire(
                         ["inline:com-chilipeppr-widget-serialport"],
                         function(sp) {
+                            sp.setSingleSelectMode();
                             sp.init(null, "grbl");
                         });
                 });
