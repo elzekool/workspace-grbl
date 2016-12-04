@@ -61,7 +61,6 @@ cpdefine("inline:nl-elzekool-workspace-grbl", ["chilipeppr_ready"], function() {
          */
         init: function() {
             this.loadWidgets();
-            this.loadWorkspaceMenu();
             this.addBillboardToWorkspaceMenu();
             this.setupResize();
             setTimeout(function() {
