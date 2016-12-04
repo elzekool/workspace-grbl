@@ -902,6 +902,8 @@ cpdefine("inline:nl-elzekool-workspace-grbl", ["chilipeppr_ready"], function() {
                     cprequire(
                         ["inline:com-chilipeppr-widget-serialport"],
                         function(sp) {
+                            console.log(sp);
+                            alert("SP initialized");
                             sp.init(null, "grbl");
                         });
                 });
